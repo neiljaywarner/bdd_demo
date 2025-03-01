@@ -10,6 +10,9 @@ targets:
         options:
           stepFolderName: njw_bdd_steps # any named folder shares steps between widget and integration tests
           # testMethodName: customTestMethodName
+          #testerType can be used for patrolTester
+          # and tesername #
+          # and testMEthodname patrolTest or PatrolWidgetTest etc.
           include: package:bdd_widget_test/bdd_options.yaml
         generate_for:
           - test/**

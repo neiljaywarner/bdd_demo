@@ -24,6 +24,9 @@ Note:
 * https://pub.dev/packages/uuv_flutter
 * patrol finders make finding things mcuh easier
 * in listile and textfield hints etc
+* eg ```await $(ListView).$(ListTile).$('Subscribe').tap();```
+* see https://patrol.leancode.co/finders/usage
+
 to run use:
 (you may have to stop and restart when modify build.yaml)
 ```shell
