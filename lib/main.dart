@@ -14,7 +14,7 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
@@ -44,6 +44,14 @@ class MyApp extends StatelessWidget {
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  }
 }
 
 class MyHomePage extends StatefulWidget {
@@ -67,6 +75,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
+  String _reference = '';
+  String _result = '';
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -76,6 +87,19 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
+  }
+
+  void _checkReference(String value) {
+    setState(() {
+      _reference = value;
+      if (_reference == 'Col 1:17') {
+        _result = 'Correct';
+      } else {
+        _result = '';
+      }
+    });
+  }
+
   }
 
   @override
@@ -115,14 +139,34 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'He is before all things and him all things hold together',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16.0),
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextField(
+                key: const ValueKey('Reference'),
+                decoration: const InputDecoration(
+                  hintText: 'Reference',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: _checkReference,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                _result,
+                style: const TextStyle(fontSize: 24.0),
+              ),
             ),
           ],
+
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -133,3 +177,5 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+
