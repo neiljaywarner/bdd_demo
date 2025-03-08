@@ -14,7 +14,7 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
@@ -44,15 +44,8 @@ class MyApp extends StatefulWidget {
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
-
-  @override
-  State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
-  @override
-  }
-}
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -98,8 +91,6 @@ class _MyHomePageState extends State<MyHomePage> {
         _result = '';
       }
     });
-  }
-
   }
 
   @override
@@ -177,5 +168,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
 
