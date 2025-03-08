@@ -67,13 +67,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  String _reference = '';
   String _result = '';
 
-  void _checkReference(String value) {
+  void _checkReference(String reference) {
     setState(() {
-      _reference = value;
-      if (_reference == 'Col 1:17') {
+      if (reference == 'Col 1:17') {
         _result = 'Correct';
       } else {
         _result = '';
