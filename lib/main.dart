@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
 /*
 # Generate `coverage/lcov.info` file
 flutter test --coverage
@@ -10,8 +14,23 @@ open coverage/html/index.html
 
 or flutter test integration_test/app_test.dart --coverage;
  */
-void main() {
+Future<void> main() async {
+  List<dynamic> list  = await _fetchData();
+  debugPrint('list: $list');
   runApp(const MyApp());
+}
+Future<List<dynamic>> _fetchData() async {
+  final response = await http.get(
+    Uri.parse(
+      'https://gist.githubusercontent.com/neiljaywarner/2880b87250163386a41e00fc1535e02c/raw/90c2b1b45a53133e6c61384d9d5f6028fefa18b2/miniverses1.json',
+    ),
+  );
+
+  if (response.statusCode == 200) {
+    return json.decode(response.body);
+  } else {
+    throw Exception('Failed to load data. Status code: ${response.statusCode}');
+  }
 }
 
 class MyApp extends StatelessWidget {
