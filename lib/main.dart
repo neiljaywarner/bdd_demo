@@ -12,12 +12,13 @@ bool isLoading = false;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  text = prefs.getString('text') ?? '';
-  reference = prefs.getString('reference') ?? '';
-
+  
+  // Always try to fetch fresh data first
+  await fetchData();
+  
+  // If fetch failed and no data was loaded, then try from cache
   if (text.isEmpty || reference.isEmpty) {
-    await fetchData();
+    await _loadFromSharedPreferences();
   }
 
   runApp(const MyApp());
@@ -38,19 +39,39 @@ Future<void> fetchData({http.Client? client}) async {
         text = item['text'];
         reference = item['ref'];
 
+        // Save to SharedPreferences for offline use
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('text', text);
         await prefs.setString('reference', reference);
       }
     } else {
-      print('Failed to load data: ${response.statusCode}');
+      // Network request failed, try loading from SharedPreferences
+      await _loadFromSharedPreferences();
+      print('Failed to load data from network: ${response.statusCode}. Using cached data if available.');
     }
   } catch (e) {
-    print('Error fetching data: $e');
+    // Error (likely network related), try loading from SharedPreferences
+    await _loadFromSharedPreferences();
+    print('Error fetching data (offline?): $e. Using cached data if available.');
   } finally {
     if (client == null) {
       httpClient.close();
     }
+  }
+}
+
+// Helper function to load from SharedPreferences
+Future<void> _loadFromSharedPreferences() async {
+  final prefs = await SharedPreferences.getInstance();
+  final savedText = prefs.getString('text');
+  final savedReference = prefs.getString('reference');
+  
+  if (savedText != null && savedReference != null) {
+    text = savedText;
+    reference = savedReference;
+    print('Successfully loaded cached data');
+  } else {
+    print('No cached data available');
   }
 }
 
@@ -103,22 +124,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _loadData() async {
-    final prefs = await SharedPreferences.getInstance();
     setState(() {
       isLoading = true;
     });
 
-    final savedText = prefs.getString('text');
-    final savedReference = prefs.getString('reference');
-
-    if (savedText != null && savedReference != null) {
-      setState(() {
-        text = savedText;
-        reference = savedReference;
-        isLoading = false;
-      });
-    } else {
+    try {
+      // Try to fetch fresh data first
       await fetchData();
+    } catch (e) {
+      print('Error in _loadData: $e');
+    } finally {
       setState(() {
         isLoading = false;
       });
